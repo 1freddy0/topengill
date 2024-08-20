@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Engilla</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --primary-color: #bb86fc;
+            --secondary-color: #03dac6;
+            --placeholder-color: #2c2c2c;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .app-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.8em;
+            background: linear-gradient(45deg, #86fccb, #03dac6, #86fcbf);
+            background-size: 200% 200%;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: flowing-gradient 5s ease infinite, glow 1s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px rgba(76, 91, 76, 0.485), 0 0 20px rgba(88, 54, 54, 0.496), 0 0 30px rgba(134, 252, 179, 0.6);
+        }
+
+        @keyframes flowing-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #346279, 0 0 10px #86fcf0, 0 0 15px #3f315b, 0 0 20px #bb86fc; }
+            to { text-shadow: 0 0 10px #22a470, 0 0 20px #465e5b, 0 0 30px #86fcbb, 0 0 40px #1c1b1d; }
+        }
+
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .image-placeholder {
+            width: 300px;
+            height: 200px;
+            background-color: var(--placeholder-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-placeholder::before {
+            content: "Engine Oil";
+            color: var(--text-color);
+            font-size: 1.2em;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .image-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+        }
+
+        #service-info {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(187, 134, 252, 0.1);
+            border-radius: 10px;
+        }
+
+        #service-info h2 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        #service-info p {
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+
+        #first-time-info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(3, 218, 198, 0.1);
+            border-radius: 10px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Engilla</h1>
+        <p class="app-title">MOTOR ENGINE OIL FORMULA SELECTOR APP</p>
+        <div class="image-placeholder">
+            <img src="{{ url_for('static', filename='images/engine_oil_image.jpeg') }}" alt="Engine Oil">
+        </div>
+        <div>
+            <button onclick="startService()">Get Started</button>
+        </div>
+        <div id="first-time-info">
+            First-time users get one free recommendation!
+        </div>
+        <div id="service-info">
+            <h2>Service Charge</h2>
+            <p>Get expert engine oil recommendations for just:</p>
+            <p>500 Naira (Nigeria) / $9 USD (International)</p>
+            <p><small>Applicable for subsequent recommendations after your free first use.</small></p>
+        </div>
+    </div>
+
+    <script>
+        async function startService() {
+            try {
+                const response = await fetch('/check-first-visit');
+                const data = await response.json();
+                
+                if (data.is_first_visit) {
+                    alert("Welcome! As a first-time user, you'll receive a free recommendation.");
+                } else {
+                    alert("You will be charged 500 Naira / $9 USD for this service.");
+                }
+                
+                window.location.href = '/index';
+            } catch (error) {
+                console.error("Error checking first visit:", error);
+                alert("An error occurred. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
